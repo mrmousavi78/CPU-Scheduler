@@ -16,6 +16,13 @@ class Scheduler:
         self.__timer = 0
 
     @property
+    def average_response_time(self):
+        awt = 0
+        for process in self.__processes:
+            awt += process.response_time
+        return awt
+
+    @property
     def processes(self):
         return self.__processes
 
@@ -41,6 +48,8 @@ class Scheduler:
             if self.__ready_queue:
                 self.__running_process = self.__ready_queue.pop(0)
                 self.__running_process.state = State.CPU
+                if self.__running_process.response_time == -1:
+                    self.__running_process.response_time = self.__timer
                 while self.__running_process.state == State.CPU:
                     self.__running_process.minus_burst_time()
                     if self.__running_process.state == State.IO:
@@ -59,6 +68,8 @@ class Scheduler:
             if self.__ready_queue:
                 self.__running_process = self.__ready_queue.pop(0)
                 self.__running_process.state = State.CPU
+                if self.__running_process.response_time == -1:
+                    self.__running_process.response_time = self.__timer
                 counter = 0
                 while self.__running_process.state == State.CPU:
                     self.__running_process.minus_burst_time()

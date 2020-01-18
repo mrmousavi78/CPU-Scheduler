@@ -10,9 +10,17 @@ class Process:
         self.__io_time = io_time
         self.__stack = self.initialize()
         self.__state = state
-        self.response_time = 0
-        self.turn_around_time = 0
-        self.waiting_time = 0
+        self.__response_time = -1
+        self.__turn_around_time = -1
+        self.__waiting_time = -1
+
+    @property
+    def response_time(self):
+        return self.__response_time
+
+    @response_time.setter
+    def response_time(self, response_time):
+        self.__response_time = response_time
 
     @property
     def state(self):
