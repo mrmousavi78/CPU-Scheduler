@@ -18,19 +18,25 @@ class Process:
         self.__state = state
 
     def minus_burst_time(self):
-        self.__stack[len(self.__stack)-1] -= 1
-        if self.__stack[len(self.__stack)-1] == 0:
-            self.__stack.pop(len(self.__stack)-1)
+        self.__stack[len(self.__stack) - 1] -= 1
+        if self.__stack[len(self.__stack) - 1] == 0:
+            self.__stack.pop()
+            if self.__stack:
+                self.__state = State.IO
         self.check_terminate()
 
+    def get_current_io_time(self):
+        return self.__stack[len(self.__stack) - 1]
+
     def get_current_burst_time(self):
-        return self.__stack[len(self.__stack)-1]
+        return self.__stack[len(self.__stack) - 1]
 
     def get_next_arrival_time(self):
         return self.__next_arrival_time
 
-    def edit_arrival_time(self, next_arrival_time):
-        self.__next_arrival_time = next_arrival_time
+    def set_next_arrival_time(self, time):
+        self.__stack.pop()
+        self.__next_arrival_time = time
 
     def check_terminate(self):
         if not self.__stack:
@@ -38,6 +44,7 @@ class Process:
 
     def initialize(self):
         stack = []
+
         if len(self.__burst_time) == len(self.__io_time):
             for i in range(len(self.__burst_time) - 1, -1, -1):
                 stack.append(self.__io_time[i])
