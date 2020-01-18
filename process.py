@@ -11,11 +11,19 @@ class Process:
         self.__stack = self.initialize()
         self.__state = state
 
-    def get_state(self):
+    @property
+    def state(self):
         return self.__state
 
-    def set_state(self, state):
-        self.__state = state
+    # def get_state(self):
+    #     return self.__state
+
+    @state.setter
+    def state(self, new_state):
+        self.__state = new_state
+
+    # def set_state(self, state):
+    #     self.__state = state
 
     def minus_burst_time(self):
         self.check_terminate()
@@ -27,19 +35,39 @@ class Process:
                     self.__state = State.IO
             self.check_terminate()
 
-    def get_current_io_time(self):
-        return self.__stack[len(self.__stack) - 1]
+    @property
+    def io_time(self):
+        return self.__stack[-1]
 
-    def get_current_burst_time(self):
-        return self.__stack[len(self.__stack) - 1]
+    # def get_current_io_time(self):
+    #     return self.__stack[len(self.__stack) - 1]
 
-    def get_next_arrival_time(self):
+    @property
+    def burst_time(self):
+        return self.__stack[-1]
+
+    # def get_current_burst_time(self):
+    #     return self.__stack[len(self.__stack) - 1]
+
+    @property
+    def next_arrival_time(self):
         return self.__next_arrival_time
 
-    def set_next_arrival_time(self, time):
+    # def get_next_arrival_time(self):
+    #     return self.__next_arrival_time
+
+    @next_arrival_time.setter
+    def next_arrival_time(self, time):
         if self.__state == State.IO:
             self.__stack.pop()
         self.__next_arrival_time = time
+        if not self.__stack:
+            self.__state = State.IOTER
+
+    # def set_next_arrival_time(self, time):
+    #     if self.__state == State.IO:
+    #         self.__stack.pop()
+    #     self.__next_arrival_time = time
 
     def check_terminate(self):
         if not self.__stack:

@@ -6,7 +6,8 @@ class State(Enum):
     READY = 1
     CPU = 2
     IO = 3
-    TERMINATED = 4
+    IOTER = 4
+    TERMINATED = 5
 
 
 class Algorithm(Enum):
