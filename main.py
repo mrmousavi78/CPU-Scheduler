@@ -8,5 +8,5 @@ for i in range(3):
 
 scheduler = Scheduler()
 scheduler.processes = processes
-scheduler.run(Algorithm.RR)
+scheduler.run(Algorithm.FCFS)
 print('Hello')

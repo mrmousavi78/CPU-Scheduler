@@ -23,16 +23,13 @@ class Scheduler:
     def processes(self, procs):
         self.__processes = procs
 
-    # def set_processes(self, processes):
-    #     self.__processes = processes
-
     def update_ready_queue(self):
         for proc in self.__processes:
-            if proc.next_arrival_time == self.__timer and proc.state != State.IOTER:
+            if proc.next_arrival_time == self.__timer and proc.state != State.IO_TERMINATED:
                 if proc.state == State.IO:
                     proc.state = State.READY
                 self.__ready_queue.append(proc)
-            if proc.next_arrival_time == self.__timer and proc.state == State.IOTER:
+            if proc.next_arrival_time == self.__timer and proc.state == State.IO_TERMINATED:
                 proc.state = State.TERMINATED
                 self.__done_list.append(proc)
         if self.__algorithm == Algorithm.SPN or self.__algorithm == Algorithm.SRT:
@@ -52,6 +49,9 @@ class Scheduler:
                         self.__done_list.append(self.__running_process)
                     self.__timer += 1
                     self.update_ready_queue()
+            else:
+                self.__timer += 1
+                self.update_ready_queue()
 
     def RR(self):
         self.update_ready_queue()
@@ -68,7 +68,7 @@ class Scheduler:
                         self.__done_list.append(self.__running_process)
                     counter += 1
                     self.__timer += 1
-                    if counter == 5 and (self.__running_process.state not in [State.IO, State.IOTER, State.TERMINATED]):
+                    if counter == 5 and (self.__running_process.state not in [State.IO, State.IO_TERMINATED, State.TERMINATED]):
                         self.__running_process.state = State.READY
                         self.__running_process.next_arrival_time = self.__timer
                     self.update_ready_queue()
