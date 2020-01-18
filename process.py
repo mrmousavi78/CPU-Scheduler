@@ -18,12 +18,14 @@ class Process:
         self.__state = state
 
     def minus_burst_time(self):
-        self.__stack[len(self.__stack) - 1] -= 1
-        if self.__stack[len(self.__stack) - 1] == 0:
-            self.__stack.pop()
-            if self.__stack:
-                self.__state = State.IO
         self.check_terminate()
+        if self.__state != State.TERMINATED:
+            self.__stack[-1] -= 1
+            if self.__stack[-1] == 0:
+                self.__stack.pop()
+                if self.__stack:
+                    self.__state = State.IO
+            self.check_terminate()
 
     def get_current_io_time(self):
         return self.__stack[len(self.__stack) - 1]
@@ -35,7 +37,8 @@ class Process:
         return self.__next_arrival_time
 
     def set_next_arrival_time(self, time):
-        self.__stack.pop()
+        if self.__state == State.IO:
+            self.__stack.pop()
         self.__next_arrival_time = time
 
     def check_terminate(self):
