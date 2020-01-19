@@ -16,22 +16,13 @@ class Scheduler:
         self.__timer = 0
 
     def average_response_time(self):
-        art = 0
-        for process in self.__processes:
-            art += process.response_time
-        return art/len(self.__processes)
+        return sum([proc.response_time for proc in self.__processes]) / len(self.__processes)
 
     def average_waiting_time(self):
-        awt = 0
-        for process in self.__processes:
-            awt += process.waiting_time
-        return awt/len(self.__processes)
+        return sum([proc.waiting_time for proc in self.__processes]) / len(self.__processes)
 
     def average_turn_around_time(self):
-        att = 0
-        for process in self.__processes:
-            att += process.turn_around_time
-        return att/len(self.__processes)
+        return sum([proc.turn_around_time for proc in self.__processes]) / len(self.__processes)
 
     @property
     def processes(self):
