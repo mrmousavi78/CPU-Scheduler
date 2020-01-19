@@ -15,12 +15,28 @@ class Process:
         self.__waiting_time = -1
 
     @property
+    def turn_around_time(self):
+        return self.__turn_around_time
+
+    @turn_around_time.setter
+    def turn_around_time(self, t_time):
+        self.__turn_around_time = t_time
+
+    @property
+    def waiting_time(self):
+        return self.__waiting_time
+
+    @waiting_time.setter
+    def waiting_time(self, w_time):
+        self.__waiting_time = w_time
+
+    @property
     def response_time(self):
         return self.__response_time
 
     @response_time.setter
-    def response_time(self, response_time):
-        self.__response_time = response_time
+    def response_time(self, r_time):
+        self.__response_time = r_time
 
     @property
     def state(self):
@@ -63,6 +79,9 @@ class Process:
         self.__next_arrival_time = time
         if not self.__stack:
             self.__state = State.IO_TERMINATED
+
+    def increment_waiting_time(self):
+        self.__waiting_time += 1
 
     def check_terminate(self):
         if not self.__stack:
