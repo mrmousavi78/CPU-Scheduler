@@ -16,6 +16,17 @@ class Scheduler:
         self.__timer = 0
         self.__idle = 0
 
+    def detail(self):
+        print(self.__algorithm)
+        print("Average response-time = " + str(self.average_response_time()))
+        print("Average turn-around-time = " + str(self.average_turn_around_time()))
+        print("Average waiting-time = " + str(self.average_waiting_time()))
+        print("CPU utilization = " + str(self.cpu_utilization()))
+        print("Throughput = " + str(self.throughput()))
+        print("CPU time = " + str(self.__timer))
+        print("Idle time = " + str(self.__idle))
+        print("--------------------------------------------")
+
     def average_response_time(self):
         return sum([proc.response_time for proc in self.__processes]) / len(self.__processes)
 

@@ -4,13 +4,22 @@ from enums import Algorithm
 
 processes = []
 for i in range(3):
-    processes.append(Process(i + 1, i, [6, 2], [8]))
+    processes.append(Process(i + 1, i, [10], [2]))
 
-scheduler = Scheduler()
-scheduler.processes = processes
-scheduler.run(Algorithm.SPN)
-print(scheduler.average_response_time())
-print(scheduler.average_turn_around_time())
-print(scheduler.average_waiting_time())
-print(scheduler.cpu_utilization())
+scheduler_fcfs = Scheduler()
+scheduler_rr = Scheduler()
+scheduler_spn = Scheduler()
+scheduler_srt = Scheduler()
+scheduler_fcfs.processes = processes
+scheduler_rr.processes = processes
+scheduler_spn.processes = processes
+scheduler_srt.processes = processes
+scheduler_fcfs.run(Algorithm.FCFS)
+scheduler_rr.run(Algorithm.RR)
+scheduler_spn.run(Algorithm.SPN)
+scheduler_srt.run(Algorithm.SRT)
+scheduler_fcfs.detail()
+scheduler_rr.detail()
+scheduler_spn.detail()
+scheduler_srt.detail()
 print('scheduling finished :)')
