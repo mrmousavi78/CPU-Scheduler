@@ -12,7 +12,7 @@ class Process:
         self.__state = state
         self.__response_time = -1
         self.__turn_around_time = -1
-        self.__waiting_time = -1
+        self.__waiting_time = 0
 
     @property
     def turn_around_time(self):
