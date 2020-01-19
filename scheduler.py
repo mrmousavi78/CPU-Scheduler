@@ -14,6 +14,7 @@ class Scheduler:
         self.__ready_queue = []
         self.__done_list = []
         self.__timer = 0
+        self.__idle = 0
 
     def average_response_time(self):
         return sum([proc.response_time for proc in self.__processes]) / len(self.__processes)
@@ -23,6 +24,12 @@ class Scheduler:
 
     def average_turn_around_time(self):
         return sum([proc.turn_around_time for proc in self.__processes]) / len(self.__processes)
+
+    def cpu_utilization(self):
+        return ((self.__timer - self.__idle) / self.__timer) * 100
+
+    def throughput(self):
+        return len(self.__processes) / self.__timer
 
     @property
     def processes(self):
@@ -65,6 +72,7 @@ class Scheduler:
                     self.update_ready_queue()
             else:
                 self.__timer += 1
+                self.__idle += 1
                 self.update_ready_queue()
 
     def RR(self):
@@ -92,6 +100,7 @@ class Scheduler:
                     self.update_ready_queue()
             else:
                 self.__timer += 1
+                self.__idle += 1
                 self.update_ready_queue()
 
     def SPN(self):
@@ -114,6 +123,7 @@ class Scheduler:
                     self.update_ready_queue()
             else:
                 self.__timer += 1
+                self.__idle += 1
                 self.update_ready_queue()
 
     def SRT(self):
@@ -134,13 +144,15 @@ class Scheduler:
                     self.__timer += 1
                     self.increment_waiting_time()
                     self.update_ready_queue()
-                    if self.__running_process.burst_time > self.__ready_queue[0].burst_time:
-                        self.__running_process.state = State.READY
-                        self.__running_process.next_arrival_time = self.__timer
-                        self.update_ready_queue()
-                        break
+                    if self.__ready_queue:                                                                              # if ready queue not empty check next condition
+                        if self.__running_process.burst_time > self.__ready_queue[0].burst_time:
+                            self.__running_process.state = State.READY
+                            self.__running_process.next_arrival_time = self.__timer
+                            self.update_ready_queue()
+                            break
             else:
                 self.__timer += 1
+                self.__idle += 1
                 self.update_ready_queue()
 
     def increment_waiting_time(self):
@@ -154,3 +166,7 @@ class Scheduler:
             self.FCFS()
         elif self.__algorithm == Algorithm.RR:
             self.RR()
+        elif self.__algorithm == Algorithm.SPN:
+            self.SPN()
+        elif self.__algorithm == Algorithm.SRT:
+            self.SRT()

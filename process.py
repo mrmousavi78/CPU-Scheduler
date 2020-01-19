@@ -66,7 +66,10 @@ class Process:
 
     @property
     def burst_time(self):
-        return self.__stack[-1]
+        if self.__stack:
+            return self.__stack[-1]
+        else:                               # this condition must be check
+            return 0
 
     @property
     def next_arrival_time(self):
