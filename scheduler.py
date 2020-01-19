@@ -49,7 +49,7 @@ class Scheduler:
                 self.__running_process = self.__ready_queue.pop(0)
                 self.__running_process.state = State.CPU
                 if self.__running_process.response_time == -1:
-                    self.__running_process.response_time = self.__timer
+                    self.__running_process.response_time = self.__timer - self.__running_process.arrival_time
                 while self.__running_process.state == State.CPU:
                     self.__running_process.minus_burst_time()
                     if self.__running_process.state == State.IO:
@@ -69,7 +69,7 @@ class Scheduler:
                 self.__running_process = self.__ready_queue.pop(0)
                 self.__running_process.state = State.CPU
                 if self.__running_process.response_time == -1:
-                    self.__running_process.response_time = self.__timer
+                    self.__running_process.response_time = self.__timer - self.__running_process.arrival_time
                 counter = 0
                 while self.__running_process.state == State.CPU:
                     self.__running_process.minus_burst_time()
@@ -82,6 +82,26 @@ class Scheduler:
                     if counter == 5 and (self.__running_process.state not in [State.IO, State.IO_TERMINATED, State.TERMINATED]):
                         self.__running_process.state = State.READY
                         self.__running_process.next_arrival_time = self.__timer
+                    self.update_ready_queue()
+            else:
+                self.__timer += 1
+                self.update_ready_queue()
+
+    def SPN(self):
+        self.update_ready_queue()
+        while len(self.__done_list) != len(self.__processes):
+            if self.__ready_queue:
+                self.__running_process = self.__ready_queue.pop(0)
+                self.__running_process.state = State.CPU
+                if self.__running_process.response_time == -1:
+                    self.__running_process.response_time = self.__timer - self.__running_process.arrival_time
+                while self.__running_process.state == State.CPU:
+                    self.__running_process.minus_burst_time()
+                    if self.__running_process.state == State.IO:
+                        self.__running_process.next_arrival_time = self.__timer + self.__running_process.io_time + 1
+                    elif self.__running_process.state == State.TERMINATED:
+                        self.__done_list.append(self.__running_process)
+                    self.__timer += 1
                     self.update_ready_queue()
             else:
                 self.__timer += 1

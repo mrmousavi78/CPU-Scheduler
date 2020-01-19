@@ -41,6 +41,10 @@ class Process:
             self.check_terminate()
 
     @property
+    def arrival_time(self):
+        return self.__arrival_time
+
+    @property
     def io_time(self):
         return self.__stack[-1]
 
