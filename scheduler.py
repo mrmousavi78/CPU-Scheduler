@@ -19,19 +19,19 @@ class Scheduler:
         art = 0
         for process in self.__processes:
             art += process.response_time
-        return art
+        return art/len(self.__processes)
 
     def average_waiting_time(self):
         awt = 0
         for process in self.__processes:
             awt += process.waiting_time
-        return awt
+        return awt/len(self.__processes)
 
     def average_turn_around_time(self):
         att = 0
         for process in self.__processes:
             att += process.turn_around_time
-        return att
+        return att/len(self.__processes)
 
     @property
     def processes(self):
@@ -44,7 +44,7 @@ class Scheduler:
     def update_ready_queue(self):
         for proc in self.__processes:
             if proc.next_arrival_time == self.__timer and proc.state != State.IO_TERMINATED:
-                if proc.state == State.IO:
+                if proc.state == State.IO or proc.state == State.NOT_ARRIVED:
                     proc.state = State.READY
                 self.__ready_queue.append(proc)
             if proc.next_arrival_time == self.__timer and proc.state == State.IO_TERMINATED:
@@ -66,10 +66,10 @@ class Scheduler:
                     self.__running_process.minus_burst_time()
                     if self.__running_process.state == State.IO:
                         self.__running_process.next_arrival_time = self.__timer + self.__running_process.io_time + 1
-                    elif self.__running_process.state == State.TERMINATED:
+                    self.__timer += 1
+                    if self.__running_process.state == State.TERMINATED:
                         self.__running_process.turn_around_time = self.__timer - self.__running_process.arrival_time
                         self.__done_list.append(self.__running_process)
-                    self.__timer += 1
                     self.increment_waiting_time()
                     self.update_ready_queue()
             else:
