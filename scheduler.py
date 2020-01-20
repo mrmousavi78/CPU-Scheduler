@@ -76,10 +76,10 @@ class Scheduler:
                     if self.__running_process.state == State.IO:
                         self.__running_process.next_arrival_time = self.__timer + self.__running_process.io_time + 1
                     self.__timer += 1
+                    self.increment_waiting_time()
                     if self.__running_process.state == State.TERMINATED:
                         self.__running_process.turn_around_time = self.__timer - self.__running_process.arrival_time
                         self.__done_list.append(self.__running_process)
-                    self.increment_waiting_time()
                     self.update_ready_queue()
             else:
                 self.__timer += 1
@@ -99,12 +99,12 @@ class Scheduler:
                     self.__running_process.minus_burst_time()
                     if self.__running_process.state == State.IO:
                         self.__running_process.next_arrival_time = self.__timer + self.__running_process.io_time + 1
-                    elif self.__running_process.state == State.TERMINATED:
-                        self.__running_process.turn_around_time = self.__timer - self.__running_process.arrival_time
-                        self.__done_list.append(self.__running_process)
                     counter += 1
                     self.__timer += 1
                     self.increment_waiting_time()
+                    if self.__running_process.state == State.TERMINATED:
+                        self.__running_process.turn_around_time = self.__timer - self.__running_process.arrival_time
+                        self.__done_list.append(self.__running_process)
                     if counter == 5 and (self.__running_process.state not in [State.IO, State.IO_TERMINATED, State.TERMINATED]):
                         self.__running_process.state = State.READY
                         self.__running_process.next_arrival_time = self.__timer
@@ -126,11 +126,11 @@ class Scheduler:
                     self.__running_process.minus_burst_time()
                     if self.__running_process.state == State.IO:
                         self.__running_process.next_arrival_time = self.__timer + self.__running_process.io_time + 1
-                    elif self.__running_process.state == State.TERMINATED:
-                        self.__running_process.turn_around_time = self.__timer - self.__running_process.arrival_time
-                        self.__done_list.append(self.__running_process)
                     self.__timer += 1
                     self.increment_waiting_time()
+                    if self.__running_process.state == State.TERMINATED:
+                        self.__running_process.turn_around_time = self.__timer - self.__running_process.arrival_time
+                        self.__done_list.append(self.__running_process)
                     self.update_ready_queue()
             else:
                 self.__timer += 1
@@ -149,11 +149,11 @@ class Scheduler:
                     self.__running_process.minus_burst_time()
                     if self.__running_process.state == State.IO:
                         self.__running_process.next_arrival_time = self.__timer + self.__running_process.io_time + 1
-                    elif self.__running_process.state == State.TERMINATED:
-                        self.__running_process.turn_around_time = self.__timer - self.__running_process.arrival_time
-                        self.__done_list.append(self.__running_process)
                     self.__timer += 1
                     self.increment_waiting_time()
+                    if self.__running_process.state == State.TERMINATED:
+                        self.__running_process.turn_around_time = self.__timer - self.__running_process.arrival_time
+                        self.__done_list.append(self.__running_process)
                     self.update_ready_queue()
                     if self.__ready_queue:                                                                              # if ready queue not empty check next condition
                         if self.__running_process.burst_time > self.__ready_queue[0].burst_time:
