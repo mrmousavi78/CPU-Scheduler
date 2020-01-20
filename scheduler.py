@@ -25,7 +25,16 @@ class Scheduler:
         print("Throughput = " + str(self.throughput()))
         print("CPU time = " + str(self.__timer))
         print("Idle time = " + str(self.__idle))
-        print("--------------------------------------------")
+        print("----------------------------------------------------")
+        print("Processes list:")
+        for process in self.__processes:
+            print("Process id: ", process.process_id)
+            print("Turn around time: ", process.turn_around_time)
+            print("Waiting time: ", process.waiting_time)
+            print("Start time: ", process.response_time + process.arrival_time)
+            print("Terminate time: ", process.terminate_time)
+            print("-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+")
+        print("***************************************\n***************************************")
 
     def average_response_time(self):
         return sum([proc.response_time for proc in self.__processes]) / len(self.__processes)
@@ -59,6 +68,7 @@ class Scheduler:
             if proc.next_arrival_time == self.__timer and proc.state == State.IO_TERMINATED:
                 proc.state = State.TERMINATED
                 proc.turn_around_time = self.__timer - proc.arrival_time
+                proc.terminate_time = self.__timer
                 self.__done_list.append(proc)
         if self.__algorithm == Algorithm.SPN or self.__algorithm == Algorithm.SRT:
             self.__ready_queue.sort(key=lambda x: x.burst_time)
@@ -79,6 +89,7 @@ class Scheduler:
                     self.increment_waiting_time()
                     if self.__running_process.state == State.TERMINATED:
                         self.__running_process.turn_around_time = self.__timer - self.__running_process.arrival_time
+                        self.__running_process.terminate_time = self.__timer
                         self.__done_list.append(self.__running_process)
                     self.update_ready_queue()
             else:
@@ -104,6 +115,7 @@ class Scheduler:
                     self.increment_waiting_time()
                     if self.__running_process.state == State.TERMINATED:
                         self.__running_process.turn_around_time = self.__timer - self.__running_process.arrival_time
+                        self.__running_process.terminate_time = self.__timer
                         self.__done_list.append(self.__running_process)
                     if counter == 5 and (self.__running_process.state not in [State.IO, State.IO_TERMINATED, State.TERMINATED]):
                         self.__running_process.state = State.READY
@@ -130,6 +142,7 @@ class Scheduler:
                     self.increment_waiting_time()
                     if self.__running_process.state == State.TERMINATED:
                         self.__running_process.turn_around_time = self.__timer - self.__running_process.arrival_time
+                        self.__running_process.terminate_time = self.__timer
                         self.__done_list.append(self.__running_process)
                     self.update_ready_queue()
             else:
@@ -153,9 +166,10 @@ class Scheduler:
                     self.increment_waiting_time()
                     if self.__running_process.state == State.TERMINATED:
                         self.__running_process.turn_around_time = self.__timer - self.__running_process.arrival_time
+                        self.__running_process.terminate_time = self.__timer
                         self.__done_list.append(self.__running_process)
                     self.update_ready_queue()
-                    if self.__ready_queue:                                                                              # if ready queue not empty check next condition
+                    if self.__ready_queue:  # if ready queue not empty check next condition
                         if self.__running_process.burst_time > self.__ready_queue[0].burst_time:
                             self.__running_process.state = State.READY
                             self.__running_process.next_arrival_time = self.__timer

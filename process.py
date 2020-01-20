@@ -13,6 +13,19 @@ class Process:
         self.__response_time = -1
         self.__turn_around_time = -1
         self.__waiting_time = 0
+        self.__terminate_time = 0
+
+    @property
+    def terminate_time(self):
+        return self.__terminate_time
+
+    @terminate_time.setter
+    def terminate_time(self, t_time):
+        self.__terminate_time = t_time
+
+    @property
+    def process_id(self):
+        return self.__process_id
 
     @property
     def turn_around_time(self):
