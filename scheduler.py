@@ -16,6 +16,10 @@ class Scheduler:
         self.__timer = 0
         self.__idle = 0
 
+    @property
+    def time(self):
+        return self.__timer
+
     def detail(self):
         print(self.__algorithm)
         print("Average response-time = " + str(self.average_response_time()))
@@ -61,7 +65,7 @@ class Scheduler:
 
     def update_ready_queue(self):
         for proc in self.__processes:
-            if proc.next_arrival_time == self.__timer and proc.state != State.IO_TERMINATED:
+            if proc.next_arrival_time == self.__timer and proc.state != State.IO_TERMINATED and proc not in self.__ready_queue:
                 if proc.state == State.IO or proc.state == State.NOT_ARRIVED:
                     proc.state = State.READY
                 self.__ready_queue.append(proc)
@@ -169,7 +173,7 @@ class Scheduler:
                         self.__running_process.terminate_time = self.__timer
                         self.__done_list.append(self.__running_process)
                     self.update_ready_queue()
-                    if self.__ready_queue:  # if ready queue not empty check next condition
+                    if self.__ready_queue and self.__running_process.state == State.CPU:  # if ready queue not empty check next condition
                         if self.__running_process.burst_time > self.__ready_queue[0].burst_time:
                             self.__running_process.state = State.READY
                             self.__running_process.next_arrival_time = self.__timer
