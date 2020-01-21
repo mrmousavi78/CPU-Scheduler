@@ -21,24 +21,23 @@ class Scheduler:
         return self.__timer
 
     def detail(self):
-        print(self.__algorithm)
-        print("Average response-time = " + str(self.average_response_time()))
-        print("Average turn-around-time = " + str(self.average_turn_around_time()))
-        print("Average waiting-time = " + str(self.average_waiting_time()))
-        print("CPU utilization = " + str(self.cpu_utilization()))
-        print("Throughput = " + str(self.throughput()))
-        print("CPU time = " + str(self.__timer))
-        print("Idle time = " + str(self.__idle))
-        print("----------------------------------------------------")
-        print("Processes list:")
-        for process in self.__processes:
-            print("Process id: ", process.process_id)
-            print("Turn around time: ", process.turn_around_time)
-            print("Waiting time: ", process.waiting_time)
-            print("Start time: ", process.response_time + process.arrival_time)
-            print("Terminate time: ", process.terminate_time)
-            print("-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+")
-        print("***************************************\n***************************************")
+        with open("/Users/VahidGh/Documents/Operating System/CPU-Scheduler/{algo_name}.txt".format(algo_name=self.__algorithm), 'w') as out_file:
+            out_file.write("Average response-time = " + str(self.average_response_time()) + "\n" +
+                           "Average response-time = " + str(self.average_response_time()) + "\n" +
+                           "Average waiting-time = " + str(self.average_waiting_time()) + "\n" +
+                           "CPU utilization = " + str(self.cpu_utilization()) + "\n" +
+                           "CPU time = " + str(self.__timer) + "\n" +
+                           "Idle time = " + str(self.__idle) + "\n" +
+                           "----------------------------------------------------" + "\n" +
+                           "#####   Processes list #####" + "\n\n"
+                           )
+            for process in self.__processes:
+                out_file.write("Process id: " + str(process.process_id) + "\n" +
+                               "Turn around time: " + str(process.turn_around_time) + "\n" +
+                               "Waiting time: " + str(process.waiting_time) + "\n" +
+                               "Start time: " + str(process.response_time + process.arrival_time) + "\n" +
+                               "Terminate time: " + str(process.terminate_time) + "\n" +
+                               "-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+" + "\n")
 
     def average_response_time(self):
         return sum([proc.response_time for proc in self.__processes]) / len(self.__processes)
