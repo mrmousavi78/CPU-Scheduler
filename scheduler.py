@@ -199,3 +199,4 @@ class Scheduler:
             self.SPN()
         elif self.__algorithm == Algorithm.SRT:
             self.SRT()
+        self.detail()
